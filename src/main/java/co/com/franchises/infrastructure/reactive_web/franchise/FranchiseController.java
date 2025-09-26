@@ -27,12 +27,12 @@ public class FranchiseController {
     }
 
     @PostMapping("/{franchiseId}/branches")
-    public Mono<Branch> addBranchToFranchise(@PathVariable String franchiseId, @RequestBody Branch branch) {
+    public Mono<Branch> addBranchToFranchise(@PathVariable String franchiseId,  @Valid @RequestBody Branch branch) {
         return branchUseCase.addBranchToFranchise(franchiseId, branch);
     }
 
     @PatchMapping("/{franchiseId}/name")
-    public Mono<Franchise> updateFranchiseName(@PathVariable String franchiseId, @RequestBody NameUpdateDto nameUpdateDto) {
+    public Mono<Franchise> updateFranchiseName(@PathVariable String franchiseId, @Valid @RequestBody NameUpdateDto nameUpdateDto) {
         return franchiseUseCase.updateFranchiseName(franchiseId, nameUpdateDto.getName());
     }
 

@@ -7,6 +7,7 @@ import co.com.franchises.domain.usecase.product.ProductUseCase;
 import co.com.franchises.infrastructure.reactive_web.branch.dto.ProductRequest;
 import co.com.franchises.infrastructure.reactive_web.branch.dto.StockUpdateDto;
 import co.com.franchises.infrastructure.reactive_web.common.dto.NameUpdateDto;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
@@ -20,12 +21,12 @@ public class BranchController {
     private final ProductUseCase productUseCase;
 
     @PatchMapping("/{branchId}/name")
-    public Mono<Branch> updateBranchName(@PathVariable String branchId, @RequestBody NameUpdateDto dto) {
+    public Mono<Branch> updateBranchName(@PathVariable String branchId, @Valid @RequestBody NameUpdateDto dto) {
         return branchUseCase.updateBranchName(branchId, dto.getName());
     }
 
     @PostMapping("/{branchId}/products")
-    public Mono<Product> addProductToBranch(@PathVariable String branchId, @RequestBody ProductRequest productRequest) {
+    public Mono<Product> addProductToBranch(@PathVariable String branchId, @Valid @RequestBody ProductRequest productRequest) {
         return productUseCase.createProduct(branchId, productRequest);
     }
 
@@ -35,7 +36,7 @@ public class BranchController {
     }
 
     @PatchMapping("/{branchId}/products/{productId}/stock")
-    public Mono<Product> updateProductStockInBranch(@PathVariable String branchId, @PathVariable String productId, @RequestBody StockUpdateDto dto) {
+    public Mono<Product> updateProductStockInBranch(@PathVariable String branchId, @PathVariable String productId, @Valid @RequestBody StockUpdateDto dto) {
         return productUseCase.updateProductStockInBranch(branchId, productId, dto.getStock());
     }
 
