@@ -10,8 +10,10 @@ import co.com.franchises.infrastructure.mysq_repository.product.ProductMapper;
 import co.com.franchises.infrastructure.mysq_repository.product.data.BranchProductData;
 import co.com.franchises.infrastructure.mysq_repository.product.data.ProductData;
 import co.com.franchises.infrastructure.reactive_web.branch.dto.ProductRequest;
+import co.com.franchises.infrastructure.reactive_web.franchise.dto.TopStockProductDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.UUID;
@@ -50,6 +52,10 @@ public class ProductUseCase {
         return branchRepository.findById(branchId)
                 .flatMap(branch -> productRepository.updateStockInBranch(branchId, productId, newStock))
                 .switchIfEmpty(Mono.defer(()-> Mono.error(new NotFoundException("Branch not found with id: " + branchId))));
+    }
+
+    public Flux<TopStockProductDto> getTopStockProducts(String franchiseId) {
+        return productRepository.findTopStockProductsByFranchiseId(franchiseId);
     }
 
     private Mono<Product> handleProductError(Throwable ex, String name, String defaultErrorMessage) {
