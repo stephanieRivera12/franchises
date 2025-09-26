@@ -37,4 +37,10 @@ public class FranchiseRepositoryAdapter implements FranchiseRepository {
                 });
     }
 
+    @Override
+    public Mono<Franchise> findById(String franchiseId) {
+        return franchiseDataRepository.findById(franchiseId)
+                .map(franchiseMapper::toEntity);
+    }
+
 }

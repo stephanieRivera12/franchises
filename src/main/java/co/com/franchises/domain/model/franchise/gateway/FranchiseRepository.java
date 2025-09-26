@@ -7,4 +7,6 @@ public interface FranchiseRepository {
     Mono<Franchise> save(Franchise franchise);
 
     Mono<Franchise> updateName(String franchiseId, String newName);
+
+    Mono<Franchise> findById(String franchiseId);
 }
