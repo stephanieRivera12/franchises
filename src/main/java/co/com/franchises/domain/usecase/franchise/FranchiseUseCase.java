@@ -3,6 +3,7 @@ package co.com.franchises.domain.usecase.franchise;
 import co.com.franchises.domain.model.franchise.entities.Franchise;
 import co.com.franchises.domain.model.franchise.gateway.FranchiseRepository;
 import co.com.franchises.infrastructure.config.exception.BusinessException;
+import co.com.franchises.infrastructure.config.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
@@ -22,7 +23,7 @@ public class FranchiseUseCase {
 
     public Mono<Franchise> updateFranchiseName(String franchiseId, String newName) {
         return franchiseRepository.updateName(franchiseId, newName)
-                .switchIfEmpty(Mono.error(new BusinessException("Franchise not found with id: " + franchiseId)))
+                .switchIfEmpty(Mono.error(new NotFoundException("Franchise not found with id: " + franchiseId)))
                 .onErrorResume(ex -> handleFranchiseError(ex, newName, "An error occurred while updating the franchise name"));
     }
 
