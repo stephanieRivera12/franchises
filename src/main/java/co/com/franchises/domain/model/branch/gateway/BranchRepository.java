@@ -7,4 +7,6 @@ public interface BranchRepository {
     Mono<Branch> save(Branch branch);
 
     Mono<Branch> updateName(String branchId, String newName);
+
+    Mono<Branch> findById(String branchId);
 }

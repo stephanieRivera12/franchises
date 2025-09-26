@@ -34,4 +34,10 @@ public class BranchRepositoryAdapter implements BranchRepository {
                     }
                 });
     }
+
+    @Override
+    public Mono<Branch> findById(String branchId) {
+        return branchDataRepository.findById(branchId)
+                .map(branchMapper::toEntity);
+    }
 }
