@@ -5,6 +5,7 @@ import co.com.franchises.domain.model.product.entities.Product;
 import co.com.franchises.domain.usecase.branch.BranchUseCase;
 import co.com.franchises.domain.usecase.product.ProductUseCase;
 import co.com.franchises.infrastructure.reactive_web.branch.dto.ProductRequest;
+import co.com.franchises.infrastructure.reactive_web.branch.dto.StockUpdateDto;
 import co.com.franchises.infrastructure.reactive_web.common.dto.NameUpdateDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -26,6 +27,16 @@ public class BranchController {
     @PostMapping("/{branchId}/products")
     public Mono<Product> addProductToBranch(@PathVariable String branchId, @RequestBody ProductRequest productRequest) {
         return productUseCase.createProduct(branchId, productRequest);
+    }
+
+    @DeleteMapping("/{branchId}/products/{productId}")
+    public Mono<Void> removeProductFromBranch(@PathVariable String branchId, @PathVariable String productId) {
+        return productUseCase.removeProductFromBranch(branchId, productId);
+    }
+
+    @PatchMapping("/{branchId}/products/{productId}/stock")
+    public Mono<Product> updateProductStockInBranch(@PathVariable String branchId, @PathVariable String productId, @RequestBody StockUpdateDto dto) {
+        return productUseCase.updateProductStockInBranch(branchId, productId, dto.getStock());
     }
 
 

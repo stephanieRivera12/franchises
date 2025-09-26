@@ -1,13 +1,13 @@
 package co.com.franchises.infrastructure.mysq_repository.product.adapter;
 
-import co.com.franchises.domain.model.product.entities.Product;
+import co.com.franchises.infrastructure.mysq_repository.product.data.ProductData;
 import co.com.franchises.infrastructure.mysq_repository.product.data.ProductDataWithBranch;
 import org.springframework.data.r2dbc.repository.Modifying;
 import org.springframework.data.r2dbc.repository.Query;
 import org.springframework.data.r2dbc.repository.R2dbcRepository;
 import reactor.core.publisher.Mono;
 
-public interface ProductDataRepository extends R2dbcRepository<Product, String> {
+public interface ProductDataRepository extends R2dbcRepository<ProductData, String> {
     @Modifying
     @Query("UPDATE product SET name = :newName WHERE id = :productId")
     Mono<Integer> updateProductName(String productId, String newName);

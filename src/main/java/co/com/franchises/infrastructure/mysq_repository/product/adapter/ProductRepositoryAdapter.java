@@ -15,6 +15,7 @@ import reactor.core.publisher.Mono;
 @RequiredArgsConstructor
 public class ProductRepositoryAdapter implements ProductRepository {
     private final ProductDataRepository productDataRepository;
+    private final BranchProductDataRepository branchProductDataRepository;
     private final ProductMapper productMapper;
     private final R2dbcEntityTemplate template;
 
@@ -37,6 +38,33 @@ public class ProductRepositoryAdapter implements ProductRepository {
         return template.insert(productData)
                 .flatMap(savedProduct -> template.insert(branchProductData)
                         .map(savedBranchProduct -> productMapper.toEntity(savedProduct, savedBranchProduct)));
+    }
+
+    @Override
+    @Transactional
+    public Mono<Void> deleteBranchProduct(String branchId, String productId) {
+        return branchProductDataRepository.deleteByBranchIdAndProductId(branchId, productId)
+                .then(branchProductDataRepository.countByProductId(productId))
+                .flatMap(count -> {
+                    if (count == 0) {
+                        return productDataRepository.deleteById(productId);
+                    }
+                    return Mono.empty();
+                })
+                .then();
+    }
+
+    @Override
+    public Mono<Product> updateStockInBranch(String branchId, String productId, Integer newStock) {
+        return branchProductDataRepository.updateProductStockInBranch(branchId, productId, newStock)
+                .flatMap(updatedRows -> {
+                    if (updatedRows > 0) {
+                        return productDataRepository.findProductWithBranchInfo(productId)
+                                .map(productMapper::toEntity);
+                    } else {
+                        return Mono.empty();
+                    }
+                });
     }
 
 }

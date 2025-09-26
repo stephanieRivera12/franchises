@@ -10,4 +10,8 @@ public interface ProductRepository {
 
     @org.springframework.transaction.annotation.Transactional
     Mono<Product> saveProductAndBranchProduct(ProductData productData, BranchProductData branchProductData);
+
+    Mono<Void> deleteBranchProduct(String branchId, String productId);
+
+    Mono<Product> updateStockInBranch(String branchId, String productId, Integer newStock);
 }

@@ -41,6 +41,17 @@ public class ProductUseCase {
                 .switchIfEmpty(Mono.error(new NotFoundException("Branch not found with id: " + branchId)));
     }
 
+    public Mono<Void> removeProductFromBranch(String branchId, String productId) {
+        return branchRepository.findById(branchId)
+                .flatMap(branch -> productRepository.deleteBranchProduct(branchId, productId));
+    }
+
+    public Mono<Product> updateProductStockInBranch(String branchId, String productId, Integer newStock) {
+        return branchRepository.findById(branchId)
+                .flatMap(branch -> productRepository.updateStockInBranch(branchId, productId, newStock))
+                .switchIfEmpty(Mono.defer(()-> Mono.error(new NotFoundException("Branch not found with id: " + branchId))));
+    }
+
     private Mono<Product> handleProductError(Throwable ex, String name, String defaultErrorMessage) {
         if (ex instanceof org.springframework.dao.DuplicateKeyException) {
             return Mono.error(new BusinessException("Product name already exists: " + name));
